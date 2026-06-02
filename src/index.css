@@ -1,0 +1,414 @@
+@import "tailwindcss";
+
+/* ===== Riverside + Apple HIG Design Tokens ===== */
+:root {
+  /* Primary (Purple) */
+  --color-primary-c100: #f2eeff;
+  --color-primary-c200: #e7dfff;
+  --color-primary-c300: #d5c7ff;
+  --color-primary-c400: #c3afff;
+  --color-primary-c500: #b196ff;
+  --color-primary-c600: #9671ff;
+  --color-primary-c700: #875eff;
+  --color-primary-c800: #7848ff;
+  --color-primary-c900: #5e3ac3;
+
+  /* Secondary (Grays — Riverside-dark + WCAG AA accessible) */
+  --color-secondary-c100: #f5f5f7;
+  --color-secondary-c150: #dbdbdb;
+  --color-secondary-c200: #bbbbbb;
+  --color-secondary-c300: #98989d;  /* WCAG-lifted: passes 4.5:1 on surface */
+  --color-secondary-c400: #757579;  /* WCAG-lifted: passes 3:1 on elevated (large text only) */
+  --color-secondary-c500: #444446;
+  --color-secondary-c600: #363638;  /* hover surface */
+  --color-secondary-c700: #2a2a2c;  /* elevated surface, border-subtle */
+  --color-secondary-c800: #1a1a1c;  /* surface — darker Riverside blend */
+  --color-secondary-c900: #141414;
+  --color-secondary-c1000: #0a0a0a; /* canvas */
+  --color-secondary-c1100: #000000;
+
+  /* Base */
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* State */
+  --color-success-c600: #34d399;
+  --color-success-c700: #30d158;  /* Apple systemGreen */
+  --color-warning-c600: #ffd60a;  /* Apple systemYellow */
+  --color-warning-c700: #ff9f0a;  /* Apple systemOrange */
+  --color-error-c600: #ff6961;
+  --color-error-c700: #ff453a;    /* Apple systemRed */
+
+  /* Accents */
+  --color-purple: #bf5af2;    /* Apple systemPurple */
+  --color-light-purple: #b377ff;
+  --color-pink: #ff375f;      /* Apple systemPink */
+  --color-dark-blue: #5e5ce6;  /* Apple systemIndigo */
+  --color-light-blue: #64d2ff; /* Apple systemCyan */
+  --color-green: #30d158;     /* Apple systemGreen */
+  --color-neon: #c2ff44;
+  --color-yellow: #ffd60a;    /* Apple systemYellow */
+  --color-orange: #ff9f0a;    /* Apple systemOrange */
+
+  /* Transparent */
+  --color-transparent-c10: rgba(0, 0, 0, 0.1);
+  --color-transparent-c25: rgba(0, 0, 0, 0.25);
+  --color-transparent-c50: rgba(0, 0, 0, 0.5);
+  --color-transparent-w10: rgba(255, 255, 255, 0.08);
+  --color-transparent-w30: rgba(255, 255, 255, 0.18);
+  --color-modal-overlay: rgba(0, 0, 0, 0.65);  /* Apple: 60-70% */
+
+  /* ===== Typography Scale (Satoshi display + Geist body) ===== */
+  --font-family-display: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-main: 'Geist Sans', 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-mono: 'Geist Mono', 'SF Mono', 'Fira Code', monospace;
+
+  /* Headings (Satoshi display) */
+  --font-heading-xlarge: 700 36px/44px var(--font-family-display);
+  --font-heading-large: 700 28px/36px var(--font-family-display);
+  --font-heading-medium: 700 24px/30px var(--font-family-display);
+  --font-heading-small: 700 20px/24px var(--font-family-display);
+  --font-heading-xsmall: 600 16px/24px var(--font-family-display);
+  --font-heading-xxsmall: 600 14px/20px var(--font-family-display);
+
+  /* Body */
+  --font-body-xlarge: 400 20px/28px var(--font-family-main);
+  --font-body-large: 400 16px/24px var(--font-family-main);
+  --font-body-medium: 400 14px/24px var(--font-family-main);
+  --font-body-small: 400 12px/18px var(--font-family-main);
+
+  /* Labels & Links */
+  --font-label-medium: 500 14px/20px var(--font-family-main);
+  --font-label-small: 500 12px/20px var(--font-family-main);
+  --font-link-medium: 500 14px/20px var(--font-family-main);
+  --font-link-small: 500 12px/20px var(--font-family-main);
+  --font-helper: 400 11px/20px var(--font-family-main);
+  --font-tip: 500 11px/16px var(--font-family-main);
+  --font-tiny-label: 400 10px/16px var(--font-family-main);
+
+  /* ===== Border Radius Hierarchy ===== */
+  --radius-sm: 8px;    /* icon hover, small controls */
+  --radius-md: 10px;   /* cards, nodes, inputs */
+  --radius-lg: 14px;   /* dialogs, panels */
+  --radius-xl: 20px;   /* large modals, sheets */
+  --radius-full: 9999px; /* pills, avatars */
+
+  /* ===== Apple-Like Shadows (subtle, layered) ===== */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+@theme {
+  /* ===== Accessible Elevation Stack (Riverside-dark) ===== */
+  --color-canvas-bg: #0a0a0a;       /* near-black canvas */
+  --color-surface: #1a1a1c;         /* panels, sidebar, topbar */
+  --color-surface-elevated: #2a2a2c; /* cards, nodes, popovers */
+  --color-surface-hover: #363638;    /* hover / interactive */
+
+  /* Borders — one step darker */
+  --color-border: #2a2a2c;
+  --color-border-subtle: #1f1f21;
+
+  /* Text — WCAG AA accessible */
+  --color-text-primary: #f5f5f7;    /* 15.96:1 on surface ✓ */
+  --color-text-secondary: #98989d;  /* 5.38:1 on surface ✓, 4.44:1 on elevated ✓ */
+  --color-text-muted: #757579;      /* 3.37:1 on surface (large text/UI only) */
+
+  /* Accent — dual tokens for accessibility */
+  --color-accent: #7848ff;          /* button fills (white on it = 5.04:1 ✓) */
+  --color-accent-text: #a78bfa;     /* readable accent text on dark surfaces */
+  --color-accent-hover: #6535e0;
+  --color-accent-glow: rgba(120, 72, 255, 0.15);
+
+  /* Node category colors — monochrome */
+  --color-node-input: #636366;
+  --color-node-ai: #636366;
+  --color-node-output: #636366;
+  --color-node-utility: #636366;
+
+  /* Status */
+  --color-status-idle: #636366;
+  --color-status-pending: #ff9f0a;
+  --color-status-running: #64d2ff;
+  --color-status-completed: #30d158;
+  --color-status-error: #ff453a;
+
+  /* Port type colors — monochrome */
+  --color-port-text: #636366;
+  --color-port-image: #636366;
+  --color-port-video: #636366;
+  --color-port-audio: #636366;
+  --color-port-any: #636366;
+
+  /* ===== Apple Spacing Scale (8pt grid) — prefixed to avoid Tailwind collision ===== */
+  --sp-xs: 4px;
+  --sp-sm: 8px;
+  --sp-md: 12px;
+  --sp-lg: 16px;
+  --sp-xl: 24px;
+  --sp-2xl: 32px;
+  --sp-3xl: 48px;
+}
+
+/* ===== Global Reset ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-canvas-bg);
+}
+
+body {
+  font: var(--font-body-medium);
+  color: var(--color-text-primary);
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== Disabled buttons — no hover effects ===== */
+button:disabled,
+button[disabled] {
+  pointer-events: none;
+}
+
+/* ===== Focus Visible — thin glowing ring ===== */
+*:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1.5px rgba(120, 72, 255, 0.6), 0 0 8px rgba(120, 72, 255, 0.25);
+  border-radius: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1.5px rgba(120, 72, 255, 0.6), 0 0 8px rgba(120, 72, 255, 0.25);
+}
+
+/* Wrapped inputs — focus ring on parent container, not inner input */
+.search-container:focus-within {
+  border-color: rgba(120, 72, 255, 0.4);
+  box-shadow: 0 0 0 1.5px rgba(120, 72, 255, 0.6), 0 0 8px rgba(120, 72, 255, 0.25);
+}
+
+.search-container input:focus,
+.search-container input:focus-visible {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* ===== React Flow Overrides ===== */
+.react-flow__node {
+  font-size: 12px;
+}
+
+.react-flow__handle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #636366;
+  transition: box-shadow 0.15s ease;
+}
+
+.react-flow__handle:hover {
+  box-shadow: 0 0 8px 2px rgba(255,255,255,0.15);
+}
+
+/* Pulse on valid targets during connection drag */
+.react-flow__handle.connectingto {
+  animation: handle-pulse 1s ease-in-out infinite;
+}
+
+@keyframes handle-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.2); }
+  50% { box-shadow: 0 0 8px 3px rgba(255, 255, 255, 0.15); }
+}
+
+/* Animated dash flow for edges */
+@keyframes dash-flow {
+  to { stroke-dashoffset: -8; }
+}
+
+/* Override React Flow's built-in animated edge styles */
+.react-flow__edge.animated path,
+.react-flow__edge-path {
+  stroke-dasharray: none !important;
+  animation: none !important;
+  stroke-width: 1.5;
+}
+
+.react-flow__minimap {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--color-border) !important;
+  background: var(--color-surface) !important;
+}
+
+.react-flow__background {
+  background: transparent !important;
+}
+
+.react-flow__pane {
+  cursor: default;
+}
+
+/* Hide React Flow attribution */
+.react-flow__attribution {
+  display: none !important;
+}
+
+/* Selection box */
+.react-flow__selection {
+  background: rgba(120, 72, 255, 0.06);
+  border: 1px solid rgba(120, 72, 255, 0.3);
+}
+
+/* ===== Polished Input Fields ===== */
+.react-flow__node textarea,
+.react-flow__node select,
+.react-flow__node input[type="text"],
+.react-flow__node input[type="number"],
+.react-flow__node input[type="url"] {
+  padding: 8px 12px !important;
+  border-radius: 8px !important;
+  background: var(--color-surface-elevated) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  color: var(--color-text-primary) !important;
+  font: var(--font-body-small) !important;
+  line-height: 1.6 !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+/* Custom chevron for selects — native arrow ignores padding */
+.react-flow__node select {
+  padding-right: 40px !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%2398989d' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 12px center !important;
+  background-size: 12px !important;
+}
+
+.react-flow__node textarea:hover,
+.react-flow__node select:hover,
+.react-flow__node input[type="text"]:hover,
+.react-flow__node input[type="number"]:hover,
+.react-flow__node input[type="url"]:hover {
+  border-color: rgba(255,255,255,0.12) !important;
+}
+
+.react-flow__node textarea:focus,
+.react-flow__node select:focus,
+.react-flow__node input[type="text"]:focus,
+.react-flow__node input[type="number"]:focus,
+.react-flow__node input[type="url"]:focus {
+  border-color: rgba(120, 72, 255, 0.4) !important;
+  box-shadow: 0 0 0 1.5px rgba(120, 72, 255, 0.6), 0 0 8px rgba(120, 72, 255, 0.25) !important;
+  outline: none !important;
+}
+
+/* ===== Scrollbar — Apple-like thin ===== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ===== Animations — Apple timing (150ms default) ===== */
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-in-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 var(--color-accent-glow); }
+  50% { box-shadow: 0 0 8px 2px var(--color-accent-glow); }
+}
+
+.animate-slide-in {
+  animation: slide-in-right 0.15s ease-out;
+}
+
+.animate-slide-up {
+  animation: slide-in-up 0.15s ease-out;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.12s ease-out;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ===== Canvas Breathing Gradient ===== */
+@keyframes canvas-breathe {
+  0% {
+    transform: scale(1) translate(0, 0);
+    opacity: 0.8;
+  }
+  25% {
+    transform: scale(1.05) translate(1%, -1%);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.02) translate(-1%, 1%);
+    opacity: 0.7;
+  }
+  75% {
+    transform: scale(1.06) translate(0.5%, 0.5%);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1) translate(0, 0);
+    opacity: 0.8;
+  }
+}
+
+.canvas-breathing-bg {
+  animation: canvas-breathe 30s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* ===== Reduced Motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
