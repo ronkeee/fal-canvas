@@ -2,7 +2,7 @@
 
 A visual node canvas for building AI workflows powered by [fal.ai](https://fal.ai). Chain together image generation, video, audio, LLM, and utility nodes into pipelines — no code required.
 
-![Riverflow screenshot](public/vite.svg)
+![Riverflow screenshot](public/Screenshot.png)
 
 ## Features
 
