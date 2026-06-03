@@ -36,7 +36,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173).
+Open [http://localhost:5274](http://localhost:5274).
 
 ### 3. Add your fal.ai API key
 
