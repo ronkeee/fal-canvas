@@ -330,6 +330,7 @@ export const MODELS: ModelInfo[] = [
         { label: '720p', value: '720p' }, { label: '1080p', value: '1080p' }, { label: '4K', value: '4k' },
       ]},
       { key: 'generate_audio', label: 'Generate Audio', type: 'toggle', default: true },
+      { key: 'seed', label: 'Seed', type: 'number', default: 0, min: 0, max: 999999999, step: 1 },
     ],
   },
   {
