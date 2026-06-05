@@ -1,6 +1,6 @@
 import { type NodeProps } from '@xyflow/react';
 import { Video, Download, Music } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { BaseNode } from '../base/BaseNode';
 import { useFlowStore } from '../../store/flow-store';
 import { useExecutionStore } from '../../store/execution-store';
@@ -35,13 +35,19 @@ export function VideoGenNode({ id, data, selected }: NodeProps) {
   const hasVideoConnected = edges.some((e) => e.target === id && e.targetHandle === 'video');
   const hasAudioConnected = edges.some((e) => e.target === id && e.targetHandle === 'audio');
 
-  // Auto-switch the model dropdown when connections change
+  // Auto-switch model only when a connection is first made (not on manual dropdown changes)
+  const prevImageConnected = useRef(hasImageConnected);
+  const prevVideoConnected = useRef(hasVideoConnected);
   useEffect(() => {
-    if (hasVideoConnected && !currentModel?.supportsVideoInput) {
+    const imageJustConnected = hasImageConnected && !prevImageConnected.current;
+    const videoJustConnected = hasVideoConnected && !prevVideoConnected.current;
+    if (videoJustConnected && !currentModel?.supportsVideoInput) {
       updateNodeData(id, { modelId: 'bytedance/seedance-2.0/enterprise/reference-to-video' });
-    } else if (hasImageConnected && !currentModel?.supportsImageInput) {
+    } else if (imageJustConnected && !currentModel?.supportsImageInput) {
       updateNodeData(id, { modelId: 'fal-ai/veo3.1/fast/image-to-video' });
     }
+    prevImageConnected.current = hasImageConnected;
+    prevVideoConnected.current = hasVideoConnected;
   }, [hasImageConnected, hasVideoConnected, currentModel, id, updateNodeData]);
 
   const willAutoSwitchForImage = hasImageConnected && !currentModel?.supportsImageInput;
