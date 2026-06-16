@@ -389,6 +389,49 @@ export const MODELS: ModelInfo[] = [
       { key: 'seconds_total', label: 'Duration (sec)', type: 'slider', default: 10, min: 1, max: 60, step: 1 },
     ],
   },
+  {
+    id: 'fal-ai/f5-tts',
+    name: 'F5-TTS',
+    category: 'audio',
+    supportsAudioInput: true,
+    audioInputKey: 'ref_audio_url',
+    description: 'Voice cloning TTS — connect a reference audio to clone any voice',
+    estimatedTimeSeconds: [5, 20],
+    estimatedCostCents: [1, 5],
+    defaultParams: { model_type: 'F5-TTS', remove_silence: true },
+    params: [
+      { key: 'model_type', label: 'Engine', type: 'select', default: 'F5-TTS', options: [
+        { label: 'F5-TTS', value: 'F5-TTS' }, { label: 'E2-TTS', value: 'E2-TTS' },
+      ]},
+      { key: 'remove_silence', label: 'Remove Silence', type: 'toggle', default: true },
+    ],
+  },
+  {
+    id: 'fal-ai/elevenlabs/tts/eleven-v3',
+    name: 'ElevenLabs V3',
+    category: 'audio',
+    description: 'High-quality expressive TTS with voice selection',
+    estimatedTimeSeconds: [3, 10],
+    estimatedCostCents: [1, 5],
+    defaultParams: { voice: 'Rachel', stability: 0.5, similarity_boost: 0.75, speed: 1 },
+    params: [
+      { key: 'voice', label: 'Voice', type: 'select', default: 'Rachel', options: [
+        { label: 'Rachel', value: 'Rachel' }, { label: 'Aria', value: 'Aria' },
+        { label: 'Bill', value: 'Bill' }, { label: 'Brian', value: 'Brian' },
+        { label: 'Callum', value: 'Callum' }, { label: 'Charlie', value: 'Charlie' },
+        { label: 'Charlotte', value: 'Charlotte' }, { label: 'Chris', value: 'Chris' },
+        { label: 'Daniel', value: 'Daniel' }, { label: 'Eric', value: 'Eric' },
+        { label: 'George', value: 'George' }, { label: 'Jessica', value: 'Jessica' },
+        { label: 'Laura', value: 'Laura' }, { label: 'Liam', value: 'Liam' },
+        { label: 'Lily', value: 'Lily' }, { label: 'Matilda', value: 'Matilda' },
+        { label: 'River', value: 'River' }, { label: 'Roger', value: 'Roger' },
+        { label: 'Sarah', value: 'Sarah' }, { label: 'Will', value: 'Will' },
+      ]},
+      { key: 'stability', label: 'Stability', type: 'slider', default: 0.5, min: 0, max: 1, step: 0.05 },
+      { key: 'similarity_boost', label: 'Similarity', type: 'slider', default: 0.75, min: 0, max: 1, step: 0.05 },
+      { key: 'speed', label: 'Speed', type: 'slider', default: 1, min: 0.7, max: 1.2, step: 0.05 },
+    ],
+  },
 
   // ── Upscale ───────────────────────────────────────
   {

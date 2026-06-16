@@ -1,22 +1,44 @@
 import { type NodeProps } from '@xyflow/react';
 import { Music, Download } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 import { BaseNode } from '../base/BaseNode';
 import { useFlowStore } from '../../store/flow-store';
 import { useExecutionStore } from '../../store/execution-store';
+import { MODELS, getModelById } from '../../fal/model-registry';
+import { ModelParamControls } from '../../components/ModelParamControls';
 import type { PortDef } from '../../engine/types';
 
 const inputs: PortDef[] = [
   { id: 'prompt', label: 'Prompt', type: 'text', required: true },
+  { id: 'reference', label: 'Reference Voice', type: 'audio', required: false },
 ];
 
 const outputs: PortDef[] = [
   { id: 'audio', label: 'Audio', type: 'audio', required: false },
 ];
 
+const audioModels = MODELS.filter((m) => m.category === 'audio');
+
 export function AudioGenNode({ id, data, selected }: NodeProps) {
   const updateNodeData = useFlowStore((s) => s.updateNodeData);
+  const edges = useFlowStore((s) => s.edges);
   const nodeState = useExecutionStore((s) => s.nodeStates[id]);
   const audioUrl = (nodeState?.result as Record<string, unknown>)?.audio as string | undefined;
+
+  const modelId = (data.modelId as string) || 'fal-ai/stable-audio';
+  const currentModel = getModelById(modelId);
+
+  const hasReferenceConnected = edges.some((e) => e.target === id && e.targetHandle === 'reference');
+
+  // Auto-switch to F5-TTS when reference voice is first connected
+  const prevReferenceConnected = useRef(hasReferenceConnected);
+  useEffect(() => {
+    const justConnected = hasReferenceConnected && !prevReferenceConnected.current;
+    if (justConnected && !currentModel?.supportsAudioInput) {
+      updateNodeData(id, { modelId: 'fal-ai/f5-tts' });
+    }
+    prevReferenceConnected.current = hasReferenceConnected;
+  }, [hasReferenceConnected, currentModel, id, updateNodeData]);
 
   return (
     <BaseNode
@@ -28,45 +50,37 @@ export function AudioGenNode({ id, data, selected }: NodeProps) {
       outputs={outputs}
       selected={selected}
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <div>
           <label style={{ marginBottom: 4, display: 'block', font: 'var(--font-tip)', color: 'var(--color-text-secondary)' }}>
             Model
           </label>
           <select
-            value={(data.modelId as string) || 'fal-ai/stable-audio'}
+            value={modelId}
             onChange={(e) => updateNodeData(id, { modelId: e.target.value })}
-            className="w-full rounded px-2 py-1.5 nodrag"
-            style={{
-              font: 'var(--font-body-small)',
-              backgroundColor: 'var(--color-surface-hover)',
-              color: 'var(--color-text-primary)',
-              border: '1px solid var(--color-border)',
-            }}
+            className="w-full rounded nodrag"
           >
-            <option value="fal-ai/stable-audio">Stable Audio</option>
+            {audioModels.map((m) => (
+              <option key={m.id} value={m.id}>
+                {m.name}{m.supportsAudioInput ? ' (voice clone)' : ''}
+              </option>
+            ))}
           </select>
+          {hasReferenceConnected && !currentModel?.supportsAudioInput && (
+            <div style={{ font: 'var(--font-tiny-label)', color: '#ff9f0a', marginTop: 4 }}>
+              Reference connected → will use F5-TTS
+            </div>
+          )}
         </div>
 
-        <div>
-          <label style={{ marginBottom: 4, display: 'block', font: 'var(--font-tip)', color: 'var(--color-text-secondary)' }}>
-            Duration (sec)
-          </label>
-          <input
-            type="number"
-            value={(data.duration as number) || 10}
-            onChange={(e) => updateNodeData(id, { duration: Number(e.target.value) })}
-            min={1}
-            max={60}
-            className="w-full rounded px-2 py-1.5 nodrag"
-            style={{
-              font: 'var(--font-body-small)',
-              backgroundColor: 'var(--color-surface-hover)',
-              color: 'var(--color-text-primary)',
-              border: '1px solid var(--color-border)',
-            }}
+        {/* Dynamic model params */}
+        {currentModel?.params && (
+          <ModelParamControls
+            params={currentModel.params}
+            values={data as Record<string, unknown>}
+            onChange={(key, value) => updateNodeData(id, { [key]: value })}
           />
-        </div>
+        )}
 
         {audioUrl && (
           <div className="flex items-center gap-2 mt-2">
@@ -93,7 +107,7 @@ export function AudioGenNode({ id, data, selected }: NodeProps) {
         {nodeState?.status === 'running' && (
           <div className="flex items-center gap-2" style={{ font: 'var(--font-helper)', color: 'var(--color-text-secondary)' }}>
             <div className="w-3 h-3 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
-            Generating audio...
+            Generating audio…
           </div>
         )}
       </div>

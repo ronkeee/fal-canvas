@@ -242,33 +242,69 @@ nodeRegistry.register(
     label: 'Audio Generation',
     category: 'ai',
     icon: 'Music',
-    inputs: [{ id: 'prompt', label: 'Prompt', type: 'text', required: true }],
+    inputs: [
+      { id: 'prompt', label: 'Prompt', type: 'text', required: true },
+      { id: 'reference', label: 'Reference Voice', type: 'audio', required: false },
+    ],
     outputs: [{ id: 'audio', label: 'Audio', type: 'audio', required: false }],
-    defaultData: { modelId: 'fal-ai/stable-audio', duration: 10 },
+    defaultData: { modelId: 'fal-ai/stable-audio' },
   },
   AudioGenNode as React.ComponentType<unknown>,
   async (node, inputs, onStatus, abortSignal) => {
-    const prompt = (inputs.prompt as string) || '';
-    const modelId = (node.data.modelId as string) || 'fal-ai/stable-audio';
+    const promptText = (inputs.prompt as string) || '';
+    const referenceAudio = inputs.reference as string | undefined;
+    let modelId = (node.data.modelId as string) || 'fal-ai/stable-audio';
 
-    // Build input: model defaults → user params
+    // Auto-switch if reference audio connected and model doesn't support it
+    if (referenceAudio) {
+      const currentModel = getModelById(modelId);
+      if (!currentModel?.supportsAudioInput) {
+        modelId = 'fal-ai/f5-tts';
+      }
+    }
+
     const model = getModelById(modelId);
+
+    // Map prompt text to the correct API key per model
+    const promptKey =
+      modelId === 'fal-ai/f5-tts' ? 'gen_text' :
+      modelId.startsWith('fal-ai/elevenlabs') ? 'text' :
+      'prompt';
+
     const input: Record<string, unknown> = {
-      prompt,
+      [promptKey]: promptText,
       ...(model?.defaultParams || {}),
     };
+
     const skipKeys = ['modelId', 'text', 'prompt', '_nodeWidth', '_nodeHeight'];
     for (const [key, value] of Object.entries(node.data)) {
       if (skipKeys.includes(key)) continue;
-      if (value === undefined || value === null) continue;
+      if (value === undefined || value === null || value === '') continue;
       input[key] = value;
     }
-    // Fallback if no duration param set
-    if (!input.seconds_total) input.seconds_total = 10;
+
+    // Pass reference audio using the model's input key
+    if (referenceAudio) {
+      const audKey = model?.audioInputKey || 'ref_audio_url';
+      input[audKey] = referenceAudio;
+    }
+
+    // Stable Audio fallback
+    if (modelId === 'fal-ai/stable-audio' && !input.seconds_total) {
+      input.seconds_total = 10;
+    }
 
     const result = await runModel({ modelId, input, onStatusUpdate: onStatus, abortSignal });
-    const audioFile = result.data.audio_file as { url: string } | undefined;
-    return { audio: audioFile?.url || '' };
+    const data = result.data;
+
+    // Each model returns audio under a different field name
+    const audioUrl =
+      (data.audio_url as { url: string } | undefined)?.url ||   // f5-tts
+      (data.audio as { url: string } | undefined)?.url ||        // elevenlabs
+      (data.audio_file as { url: string } | undefined)?.url ||   // stable-audio
+      '';
+
+    return { audio: audioUrl };
   },
 );
 
