@@ -88,9 +88,9 @@ function getInputsForNode(
           appendInput(inputs, key, sourceResult.audio);
         }
 
-        // Also spread all results as a fallback (won't overwrite collected arrays)
+        // Also spread all results as a fallback (won't overwrite collected arrays, skip empty strings)
         for (const [k, v] of Object.entries(sourceResult)) {
-          if (!(k in inputs)) inputs[k] = v;
+          if (!(k in inputs) && v !== '' && v !== null && v !== undefined) inputs[k] = v;
         }
       }
     }
