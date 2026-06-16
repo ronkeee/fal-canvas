@@ -245,11 +245,15 @@ async function executeNodes(
               const status = e.status as number | undefined;
               const body = e.body as Record<string, unknown> | undefined;
               const baseMsg = (e.message as string) || '';
-              // body.detail is the most descriptive — prefer it over the generic message
-              const detail = (body?.detail as string) || (body?.message as string) || '';
+              // body.detail may be a string, an object {msg, code}, or an array
+              const rawDetail = body?.detail ?? body?.message;
+              const detail =
+                typeof rawDetail === 'string' ? rawDetail :
+                rawDetail && typeof rawDetail === 'object' && 'msg' in (rawDetail as object)
+                  ? String((rawDetail as Record<string, unknown>).msg)
+                  : rawDetail ? JSON.stringify(rawDetail) : '';
               const parts: string[] = [];
               if (status) parts.push(`[${status}]`);
-              // Prefer detail if it's different/more specific than baseMsg
               if (detail && detail !== baseMsg) {
                 parts.push(detail);
               } else if (baseMsg) {
