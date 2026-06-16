@@ -200,7 +200,7 @@ nodeRegistry.register(
     // Build input: model defaults → user params
     const model = getModelById(modelId);
     const input: Record<string, unknown> = {
-      prompt,
+      ...(model?.noTextInput ? {} : { prompt }),
       ...(model?.defaultParams || {}),
     };
     const skipKeys = ['modelId', 'text', 'prompt', '_nodeWidth', '_nodeHeight'];

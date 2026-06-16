@@ -34,6 +34,8 @@ export interface ModelInfo {
   supportsAudioInput?: boolean;
   /** The API param key for the audio input — Seedance uses 'audio_urls' */
   audioInputKey?: string;
+  /** Set true for models that take no text prompt (e.g. OmniHuman) */
+  noTextInput?: boolean;
 }
 
 // ===== Shared Option Sets =====
@@ -417,6 +419,22 @@ export const MODELS: ModelInfo[] = [
       { key: 'num_inference_steps', label: 'Steps', type: 'slider', default: 30, min: 10, max: 50, step: 1 },
       { key: 'guidance_scale', label: 'Guidance', type: 'slider', default: 3.5, min: 1, max: 10, step: 0.5 },
     ],
+  },
+
+  {
+    id: 'fal-ai/bytedance/omnihuman',
+    name: 'OmniHuman',
+    category: 'video',
+    supportsImageInput: true,
+    imageInputKey: 'image_url',
+    supportsAudioInput: true,
+    audioInputKey: 'audio_url',
+    noTextInput: true,
+    description: 'ByteDance OmniHuman — animate a portrait image to match audio (max 30s)',
+    estimatedTimeSeconds: [20, 60],
+    estimatedCostCents: [5, 20],
+    defaultParams: {},
+    params: [],
   },
 
   // ── Audio Generation ──────────────────────────────
