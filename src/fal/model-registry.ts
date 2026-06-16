@@ -376,7 +376,64 @@ export const MODELS: ModelInfo[] = [
     ],
   },
 
+  {
+    id: 'fal-ai/wan/v2.7/text-to-video',
+    name: 'Wan 2.7',
+    category: 'video',
+    description: 'Alibaba\'s latest video model — enhanced motion smoothness and scene fidelity',
+    estimatedTimeSeconds: [30, 90],
+    estimatedCostCents: [3, 12],
+    defaultParams: { resolution: '720p', aspect_ratio: '16:9', num_frames: 81, num_inference_steps: 30, guidance_scale: 3.5 },
+    params: [
+      { key: 'resolution', label: 'Resolution', type: 'select', default: '720p', options: [
+        { label: '580p', value: '580p' }, { label: '720p', value: '720p' },
+      ]},
+      { key: 'aspect_ratio', label: 'Aspect Ratio', type: 'select', default: '16:9', options: [
+        { label: '16:9', value: '16:9' }, { label: '9:16', value: '9:16' },
+      ]},
+      { key: 'num_frames', label: 'Frames', type: 'slider', default: 81, min: 17, max: 161, step: 8 },
+      { key: 'num_inference_steps', label: 'Steps', type: 'slider', default: 30, min: 10, max: 50, step: 1 },
+      { key: 'guidance_scale', label: 'Guidance', type: 'slider', default: 3.5, min: 1, max: 10, step: 0.5 },
+    ],
+  },
+  {
+    id: 'fal-ai/wan/v2.7/image-to-video',
+    name: 'Wan 2.7 Img2Vid',
+    category: 'video',
+    supportsImageInput: true,
+    imageInputKey: 'image_url',
+    description: 'Wan 2.7 image-to-video — animate any image with smooth motion',
+    estimatedTimeSeconds: [30, 90],
+    estimatedCostCents: [3, 12],
+    defaultParams: { resolution: '720p', aspect_ratio: '16:9', num_frames: 81, num_inference_steps: 30, guidance_scale: 3.5 },
+    params: [
+      { key: 'resolution', label: 'Resolution', type: 'select', default: '720p', options: [
+        { label: '580p', value: '580p' }, { label: '720p', value: '720p' },
+      ]},
+      { key: 'aspect_ratio', label: 'Aspect Ratio', type: 'select', default: '16:9', options: [
+        { label: '16:9', value: '16:9' }, { label: '9:16', value: '9:16' },
+      ]},
+      { key: 'num_frames', label: 'Frames', type: 'slider', default: 81, min: 17, max: 161, step: 8 },
+      { key: 'num_inference_steps', label: 'Steps', type: 'slider', default: 30, min: 10, max: 50, step: 1 },
+      { key: 'guidance_scale', label: 'Guidance', type: 'slider', default: 3.5, min: 1, max: 10, step: 0.5 },
+    ],
+  },
+
   // ── Audio Generation ──────────────────────────────
+  {
+    id: 'fal-ai/qwen-3-tts/text-to-speech/1.7b',
+    name: 'Qwen 3 TTS',
+    category: 'audio',
+    supportsAudioInput: true,
+    description: 'Alibaba Qwen 3 TTS — voice cloning via two-step embedding (clone + synthesize)',
+    estimatedTimeSeconds: [5, 20],
+    estimatedCostCents: [1, 5],
+    defaultParams: { temperature: 0.9, repetition_penalty: 1.05 },
+    params: [
+      { key: 'temperature', label: 'Temperature', type: 'slider', default: 0.9, min: 0.1, max: 2.0, step: 0.05 },
+      { key: 'repetition_penalty', label: 'Rep. Penalty', type: 'slider', default: 1.05, min: 1.0, max: 1.5, step: 0.01 },
+    ],
+  },
   {
     id: 'fal-ai/stable-audio',
     name: 'Stable Audio',

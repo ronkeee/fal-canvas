@@ -265,10 +265,35 @@ nodeRegistry.register(
 
     const model = getModelById(modelId);
 
+    // Qwen 3 TTS: two-step pipeline — clone voice first, then synthesize
+    if (modelId === 'fal-ai/qwen-3-tts/text-to-speech/1.7b' && referenceAudio) {
+      onStatus?.('queued');
+      const cloneResult = await runModel({
+        modelId: 'fal-ai/qwen-3-tts/clone-voice/1.7b',
+        input: { audio_url: referenceAudio },
+        abortSignal,
+      });
+      const embeddingUrl = (cloneResult.data.speaker_embedding as { url: string } | undefined)?.url;
+      const ttsInput: Record<string, unknown> = {
+        text: promptText,
+        ...(model?.defaultParams || {}),
+        ...(embeddingUrl ? { speaker_voice_embedding_file_url: embeddingUrl } : {}),
+      };
+      const skipKeys = ['modelId', 'text', 'prompt', '_nodeWidth', '_nodeHeight'];
+      for (const [key, value] of Object.entries(node.data)) {
+        if (skipKeys.includes(key)) continue;
+        if (value === undefined || value === null || value === '') continue;
+        ttsInput[key] = value;
+      }
+      const ttsResult = await runModel({ modelId, input: ttsInput, onStatusUpdate: onStatus, abortSignal });
+      const audioUrl = (ttsResult.data.audio as { url: string } | undefined)?.url || '';
+      return { audio: audioUrl };
+    }
+
     // Map prompt text to the correct API key per model
     const promptKey =
       modelId === 'fal-ai/f5-tts' ? 'gen_text' :
-      modelId.startsWith('fal-ai/elevenlabs') || modelId.startsWith('fal-ai/minimax') ? 'text' :
+      modelId.startsWith('fal-ai/elevenlabs') || modelId.startsWith('fal-ai/minimax') || modelId.startsWith('fal-ai/qwen-3-tts') ? 'text' :
       'prompt';
 
     const input: Record<string, unknown> = {
@@ -300,7 +325,7 @@ nodeRegistry.register(
     // Each model returns audio under a different field name
     const audioUrl =
       (data.audio_url as { url: string } | undefined)?.url ||   // f5-tts
-      (data.audio as { url: string } | undefined)?.url ||        // elevenlabs
+      (data.audio as { url: string } | undefined)?.url ||        // elevenlabs / minimax / qwen
       (data.audio_file as { url: string } | undefined)?.url ||   // stable-audio
       '';
 
