@@ -268,7 +268,7 @@ nodeRegistry.register(
     // Map prompt text to the correct API key per model
     const promptKey =
       modelId === 'fal-ai/f5-tts' ? 'gen_text' :
-      modelId.startsWith('fal-ai/elevenlabs') ? 'text' :
+      modelId.startsWith('fal-ai/elevenlabs') || modelId.startsWith('fal-ai/minimax') ? 'text' :
       'prompt';
 
     const input: Record<string, unknown> = {

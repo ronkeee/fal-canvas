@@ -71,7 +71,7 @@ export function AudioGenNode({ id, data, selected }: NodeProps) {
           </select>
           {hasReferenceConnected && (
             <div style={{ font: 'var(--font-tiny-label)', color: '#30d158', marginTop: 4 }}>
-              Reference Voice connected → using F5-TTS for voice cloning
+              Reference Voice connected → {currentModel?.name || 'F5-TTS'} will clone the voice
             </div>
           )}
         </div>

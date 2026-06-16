@@ -432,6 +432,27 @@ export const MODELS: ModelInfo[] = [
       { key: 'speed', label: 'Speed', type: 'slider', default: 1, min: 0.7, max: 1.2, step: 0.05 },
     ],
   },
+  {
+    id: 'fal-ai/minimax/voice-clone',
+    name: 'MiniMax Voice Clone',
+    category: 'audio',
+    supportsAudioInput: true,
+    audioInputKey: 'audio_url',
+    description: 'High-quality voice cloning — connect reference audio (min 10s) to clone any voice',
+    estimatedTimeSeconds: [5, 20],
+    estimatedCostCents: [1, 5],
+    defaultParams: { model: 'speech-02-hd', noise_reduction: false, need_volume_normalization: false },
+    params: [
+      { key: 'model', label: 'Quality', type: 'select', default: 'speech-02-hd', options: [
+        { label: 'HD (best)', value: 'speech-02-hd' },
+        { label: 'Turbo (fast)', value: 'speech-02-turbo' },
+        { label: 'HD v1', value: 'speech-01-hd' },
+        { label: 'Turbo v1', value: 'speech-01-turbo' },
+      ]},
+      { key: 'noise_reduction', label: 'Noise Reduction', type: 'toggle', default: false },
+      { key: 'need_volume_normalization', label: 'Normalize Volume', type: 'toggle', default: false },
+    ],
+  },
 
   // ── Upscale ───────────────────────────────────────
   {
