@@ -422,6 +422,25 @@ export const MODELS: ModelInfo[] = [
   },
 
   {
+    id: 'fal-ai/hedra/character-2',
+    name: 'Hedra Character-2',
+    category: 'video',
+    supportsImageInput: true,
+    imageInputKey: 'image_url',
+    supportsAudioInput: true,
+    audioInputKey: 'audio_url',
+    noTextInput: true,
+    description: 'Hedra Character-2 — portrait animation with audio-driven lip sync',
+    estimatedTimeSeconds: [20, 60],
+    estimatedCostCents: [5, 20],
+    defaultParams: { aspect_ratio: '1:1' },
+    params: [
+      { key: 'aspect_ratio', label: 'Aspect Ratio', type: 'select', default: '1:1', options: [
+        { label: '1:1', value: '1:1' }, { label: '16:9', value: '16:9' }, { label: '9:16', value: '9:16' },
+      ]},
+    ],
+  },
+  {
     id: 'fal-ai/bytedance/omnihuman',
     name: 'OmniHuman',
     category: 'video',
