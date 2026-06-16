@@ -30,14 +30,15 @@ export function AudioGenNode({ id, data, selected }: NodeProps) {
 
   const hasReferenceConnected = edges.some((e) => e.target === id && e.targetHandle === 'reference');
 
-  // While reference voice is connected, always use F5-TTS (the only model that supports it)
+  // Auto-switch only on the moment reference is connected/disconnected — never override manual selection
   const prevReferenceConnected = useRef(hasReferenceConnected);
   useEffect(() => {
-    if (hasReferenceConnected && !currentModel?.supportsAudioInput) {
+    const justConnected = hasReferenceConnected && !prevReferenceConnected.current;
+    const justDisconnected = !hasReferenceConnected && prevReferenceConnected.current;
+    if (justConnected && !currentModel?.supportsAudioInput) {
       updateNodeData(id, { modelId: 'fal-ai/f5-tts' });
     }
-    // When reference is disconnected, revert to Stable Audio
-    if (!hasReferenceConnected && prevReferenceConnected.current && currentModel?.supportsAudioInput) {
+    if (justDisconnected && currentModel?.supportsAudioInput) {
       updateNodeData(id, { modelId: 'fal-ai/stable-audio' });
     }
     prevReferenceConnected.current = hasReferenceConnected;

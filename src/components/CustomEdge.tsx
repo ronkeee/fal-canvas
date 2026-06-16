@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useRef } from 'react';
 import { BaseEdge, EdgeLabelRenderer, getBezierPath, type EdgeProps } from '@xyflow/react';
 import { Plus, X } from 'lucide-react';
 import { type PortType } from '../engine/types';
@@ -15,10 +15,10 @@ export function CustomEdge({
   sourceY,
   targetX,
   targetY,
-  sourcePosition,
-  targetPosition,
   data,
   selected,
+  sourcePosition,
+  targetPosition,
 }: EdgeProps) {
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -35,6 +35,16 @@ export function CustomEdge({
   const [menuPos, setMenuPos] = useState<{ x: number; y: number } | null>(null);
   const insertNodeOnEdge = useFlowStore((s) => s.insertNodeOnEdge);
   const deleteEdge = useFlowStore((s) => s.deleteEdge);
+
+  // Delay unhover so the pill doesn't vanish before the mouse can enter it
+  const unhoverTimer = useRef<ReturnType<typeof setTimeout>>();
+  const scheduleUnhover = useCallback(() => {
+    unhoverTimer.current = setTimeout(() => setHovered(false), 80);
+  }, []);
+  const cancelUnhover = useCallback(() => {
+    clearTimeout(unhoverTimer.current);
+    setHovered(true);
+  }, []);
 
   // Check if either connected node is selected
   const nodeSelected = useFlowStore((s) =>
@@ -55,28 +65,17 @@ export function CustomEdge({
 
   const isActive = hovered || selected || nodeSelected;
 
-  // Constant speed: 150px per second
+  // Constant speed: 500px per second
   const dotDuration = useMemo(() => {
     const dx = targetX - sourceX;
     const dy = targetY - sourceY;
-    const approxLen = Math.sqrt(dx * dx + dy * dy) * 1.4; // bezier is ~1.4x straight line
+    const approxLen = Math.sqrt(dx * dx + dy * dy) * 1.4;
     return `${Math.max(0.3, approxLen / 500)}s`;
   }, [sourceX, sourceY, targetX, targetY]);
 
   return (
     <>
-      {/* Fat invisible hover path */}
-      <path
-        d={edgePath}
-        fill="none"
-        stroke="transparent"
-        strokeWidth={20}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        style={{ pointerEvents: 'stroke' }}
-      />
-
-      {/* Main edge — always solid, thin, subtle */}
+      {/* Main edge */}
       <BaseEdge
         id={id}
         path={edgePath}
@@ -86,6 +85,17 @@ export function CustomEdge({
           opacity: selected ? 0.9 : hovered ? 0.6 : 0.35,
           strokeDasharray: 'none',
         }}
+      />
+
+      {/* Fat invisible hover path — rendered AFTER BaseEdge so it sits on top in SVG z-order */}
+      <path
+        d={edgePath}
+        fill="none"
+        stroke="transparent"
+        strokeWidth={20}
+        onMouseEnter={cancelUnhover}
+        onMouseLeave={scheduleUnhover}
+        style={{ pointerEvents: 'stroke', cursor: 'pointer' }}
       />
 
       {/* Moving dot on hover/selected */}
@@ -98,11 +108,9 @@ export function CustomEdge({
               <stop offset="100%" stopColor="rgba(255,255,255,0)" />
             </radialGradient>
           </defs>
-          {/* Outer glow */}
           <ellipse rx={14} ry={6} fill={`url(#glow-${id})`}>
             <animateMotion dur={dotDuration} repeatCount="indefinite" path={edgePath} rotate="auto" />
           </ellipse>
-          {/* Core dot */}
           <ellipse rx={4} ry={2} fill="rgba(255,255,255,0.8)">
             <animateMotion dur={dotDuration} repeatCount="indefinite" path={edgePath} rotate="auto" />
           </ellipse>
@@ -114,8 +122,8 @@ export function CustomEdge({
         {hovered && !menuPos && (
           <div
             className="nodrag nopan"
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
+            onMouseEnter={cancelUnhover}
+            onMouseLeave={scheduleUnhover}
             style={{
               position: 'absolute',
               left: labelX,
@@ -130,6 +138,7 @@ export function CustomEdge({
               border: '1.5px solid rgba(255,255,255,0.12)',
               borderRadius: 20,
               padding: '2px 4px',
+              zIndex: 1000,
               animation: 'fade-in 0.1s ease-out',
             }}
           >
