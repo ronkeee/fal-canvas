@@ -30,12 +30,15 @@ export function AudioGenNode({ id, data, selected }: NodeProps) {
 
   const hasReferenceConnected = edges.some((e) => e.target === id && e.targetHandle === 'reference');
 
-  // Auto-switch to F5-TTS when reference voice is first connected
+  // While reference voice is connected, always use F5-TTS (the only model that supports it)
   const prevReferenceConnected = useRef(hasReferenceConnected);
   useEffect(() => {
-    const justConnected = hasReferenceConnected && !prevReferenceConnected.current;
-    if (justConnected && !currentModel?.supportsAudioInput) {
+    if (hasReferenceConnected && !currentModel?.supportsAudioInput) {
       updateNodeData(id, { modelId: 'fal-ai/f5-tts' });
+    }
+    // When reference is disconnected, revert to Stable Audio
+    if (!hasReferenceConnected && prevReferenceConnected.current && currentModel?.supportsAudioInput) {
+      updateNodeData(id, { modelId: 'fal-ai/stable-audio' });
     }
     prevReferenceConnected.current = hasReferenceConnected;
   }, [hasReferenceConnected, currentModel, id, updateNodeData]);
@@ -66,9 +69,9 @@ export function AudioGenNode({ id, data, selected }: NodeProps) {
               </option>
             ))}
           </select>
-          {hasReferenceConnected && !currentModel?.supportsAudioInput && (
-            <div style={{ font: 'var(--font-tiny-label)', color: '#ff9f0a', marginTop: 4 }}>
-              Reference connected → will use F5-TTS
+          {hasReferenceConnected && (
+            <div style={{ font: 'var(--font-tiny-label)', color: '#30d158', marginTop: 4 }}>
+              Reference Voice connected → using F5-TTS for voice cloning
             </div>
           )}
         </div>
