@@ -42,7 +42,7 @@ function topologicalSort(nodes: Node[], edges: Edge[]): string[] {
 
 /** Helper: append a value to an input key, collecting into arrays when multiple edges target the same handle */
 function appendInput(inputs: Record<string, unknown>, key: string, value: unknown) {
-  if (value === undefined || value === null) return;
+  if (value === undefined || value === null || value === '') return;
   const existing = inputs[key];
   if (existing === undefined) {
     // First value — store as-is (string)
