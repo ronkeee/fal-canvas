@@ -264,10 +264,10 @@ export const MODELS: ModelInfo[] = [
     description: 'Long text-to-video clips up to 25 seconds',
     estimatedTimeSeconds: [30, 120],
     estimatedCostCents: [15, 50],
-    defaultParams: { duration: '4s', resolution: '720p', aspect_ratio: '16:9' },
+    defaultParams: { duration: '4', resolution: '720p', aspect_ratio: '16:9' },
     params: [
-      { key: 'duration', label: 'Duration', type: 'select', default: '4s', options: [
-        { label: '4s', value: '4s' }, { label: '8s', value: '8s' }, { label: '12s', value: '12s' }, { label: '25s', value: '25s' },
+      { key: 'duration', label: 'Duration', type: 'select', default: '4', options: [
+        { label: '4s', value: '4' }, { label: '8s', value: '8' }, { label: '12s', value: '12' }, { label: '15s', value: '15' },
       ]},
       { key: 'resolution', label: 'Resolution', type: 'select', default: '720p', options: [
         { label: '720p', value: '720p' }, { label: '1080p', value: '1080p' },
@@ -364,10 +364,10 @@ export const MODELS: ModelInfo[] = [
     description: 'Sora image-to-video with rich detail',
     estimatedTimeSeconds: [30, 120],
     estimatedCostCents: [15, 50],
-    defaultParams: { duration: '4s', resolution: '720p', aspect_ratio: '16:9' },
+    defaultParams: { duration: '4', resolution: '720p', aspect_ratio: '16:9' },
     params: [
-      { key: 'duration', label: 'Duration', type: 'select', default: '4s', options: [
-        { label: '4s', value: '4s' }, { label: '8s', value: '8s' }, { label: '12s', value: '12s' },
+      { key: 'duration', label: 'Duration', type: 'select', default: '4', options: [
+        { label: '4s', value: '4' }, { label: '8s', value: '8' }, { label: '12s', value: '12' }, { label: '15s', value: '15' },
       ]},
       { key: 'resolution', label: 'Resolution', type: 'select', default: '720p', options: [
         { label: '720p', value: '720p' }, { label: '1080p', value: '1080p' },
