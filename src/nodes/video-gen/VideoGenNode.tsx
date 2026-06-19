@@ -42,7 +42,7 @@ export function VideoGenNode({ id, data, selected }: NodeProps) {
     const imageJustConnected = hasImageConnected && !prevImageConnected.current;
     const videoJustConnected = hasVideoConnected && !prevVideoConnected.current;
     if (videoJustConnected && !currentModel?.supportsVideoInput) {
-      updateNodeData(id, { modelId: 'bytedance/seedance-2.0/enterprise/reference-to-video' });
+      updateNodeData(id, { modelId: 'bytedance/seedance-2.0/reference-to-video' });
     } else if (imageJustConnected && !currentModel?.supportsImageInput) {
       updateNodeData(id, { modelId: 'fal-ai/veo3.1/fast/image-to-video' });
     }
@@ -87,13 +87,13 @@ export function VideoGenNode({ id, data, selected }: NodeProps) {
           )}
           {willAutoSwitchForVideo && (
             <div style={{ font: 'var(--font-tiny-label)', color: '#ff9f0a', marginTop: 4 }}>
-              Video connected → will use Seedance 2.0 Enterprise
+              Video connected → will use Seedance 2.0 Multi-Ref
             </div>
           )}
           {willAutoSwitchForAudio && (
             <div className="flex items-center gap-1" style={{ font: 'var(--font-tiny-label)', color: '#ff9f0a', marginTop: 4 }}>
               <Music size={10} />
-              Audio connected → will use Seedance 2.0 Enterprise
+              Audio connected → will use Seedance 2.0 Multi-Ref
             </div>
           )}
         </div>

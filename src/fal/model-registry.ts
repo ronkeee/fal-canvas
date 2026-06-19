@@ -239,85 +239,76 @@ export const MODELS: ModelInfo[] = [
   // ── Video Generation — Text to Video ─────────────
   {
     id: 'fal-ai/veo3',
-    name: 'Veo 3.1',
+    name: 'Veo 3',
     category: 'video',
-    supportsImageInput: false,
-    description: 'Top video quality + audio sync (text only)',
+    description: 'Google Veo 3 — top quality with native audio sync',
     estimatedTimeSeconds: [30, 120],
     estimatedCostCents: [15, 50],
-    defaultParams: { duration: '4s', aspect_ratio: '16:9', generate_audio: true },
+    defaultParams: { duration: '8s', aspect_ratio: '16:9', resolution: '720p', generate_audio: true },
     params: [
-      { key: 'duration', label: 'Duration', type: 'select', default: '4s', options: [
-        { label: '4s', value: '4s' }, { label: '8s', value: '8s' }, { label: '12s', value: '12s' },
+      { key: 'duration', label: 'Duration', type: 'select', default: '8s', options: [
+        { label: '4s', value: '4s' }, { label: '6s', value: '6s' }, { label: '8s', value: '8s' },
       ]},
       { key: 'aspect_ratio', label: 'Aspect Ratio', type: 'select', default: '16:9', options: [
         { label: '16:9', value: '16:9' }, { label: '9:16', value: '9:16' },
+      ]},
+      { key: 'resolution', label: 'Resolution', type: 'select', default: '720p', options: [
+        { label: '720p', value: '720p' }, { label: '1080p', value: '1080p' },
       ]},
       { key: 'generate_audio', label: 'Generate Audio', type: 'toggle', default: true },
     ],
   },
   {
-    id: 'fal-ai/sora',
-    name: 'Sora 2 Pro',
+    id: 'bytedance/seedance-2.0/text-to-video',
+    name: 'Seedance 2.0',
     category: 'video',
-    supportsImageInput: false,
-    description: 'Long text-to-video clips up to 25 seconds',
-    estimatedTimeSeconds: [30, 120],
-    estimatedCostCents: [15, 50],
-    defaultParams: { duration: '4', resolution: '720p', aspect_ratio: '16:9' },
-    params: [
-      { key: 'duration', label: 'Duration', type: 'select', default: '4', options: [
-        { label: '4s', value: '4' }, { label: '8s', value: '8' }, { label: '12s', value: '12' }, { label: '15s', value: '15' },
-      ]},
-      { key: 'resolution', label: 'Resolution', type: 'select', default: '720p', options: [
-        { label: '720p', value: '720p' }, { label: '1080p', value: '1080p' },
-      ]},
-      { key: 'aspect_ratio', label: 'Aspect Ratio', type: 'select', default: '16:9', options: [
-        { label: '16:9', value: '16:9' }, { label: '9:16', value: '9:16' }, { label: '1:1', value: '1:1' },
-      ]},
-    ],
-  },
-
-  // ── Video Generation — Image to Video ─────────────
-  {
-    id: 'bytedance/seedance-2.0/enterprise/reference-to-video',
-    name: 'Seedance 2.0 Enterprise',
-    category: 'video',
-    supportsImageInput: true,
-    imageInputKey: 'image_urls',
-    supportsVideoInput: true,
-    videoInputKey: 'video_urls',
-    supportsAudioInput: true,
-    audioInputKey: 'audio_urls',
-    description: 'Seedance 2.0 Enterprise — up to 9 image + 3 video refs, reduced content restrictions',
-    estimatedTimeSeconds: [20, 90],
-    estimatedCostCents: [10, 60],
+    description: 'ByteDance Seedance 2.0 — fast, high quality text-to-video',
+    estimatedTimeSeconds: [20, 60],
+    estimatedCostCents: [5, 20],
     defaultParams: { resolution: '720p', duration: 'auto', aspect_ratio: 'auto', generate_audio: true },
     params: [
       { key: 'resolution', label: 'Resolution', type: 'select', default: '720p', options: [
         { label: '480p', value: '480p' }, { label: '720p', value: '720p' }, { label: '1080p', value: '1080p' },
       ]},
       { key: 'duration', label: 'Duration', type: 'select', default: 'auto', options: [
-        { label: 'Auto', value: 'auto' },
-        { label: '4s', value: '4' }, { label: '5s', value: '5' }, { label: '6s', value: '6' },
-        { label: '7s', value: '7' }, { label: '8s', value: '8' }, { label: '9s', value: '9' },
-        { label: '10s', value: '10' }, { label: '12s', value: '12' }, { label: '15s', value: '15' },
+        { label: 'Auto', value: 'auto' }, { label: '4s', value: '4' }, { label: '5s', value: '5' },
+        { label: '6s', value: '6' }, { label: '8s', value: '8' }, { label: '10s', value: '10' }, { label: '15s', value: '15' },
       ]},
       { key: 'aspect_ratio', label: 'Aspect Ratio', type: 'select', default: 'auto', options: [
-        { label: 'Auto', value: 'auto' }, { label: '21:9', value: '21:9' }, { label: '16:9', value: '16:9' },
-        { label: '4:3', value: '4:3' }, { label: '1:1', value: '1:1' }, { label: '3:4', value: '3:4' }, { label: '9:16', value: '9:16' },
+        { label: 'Auto', value: 'auto' }, { label: '16:9', value: '16:9' },
+        { label: '4:3', value: '4:3' }, { label: '1:1', value: '1:1' }, { label: '9:16', value: '9:16' },
       ]},
       { key: 'generate_audio', label: 'Generate Audio', type: 'toggle', default: true },
-      { key: 'seed', label: 'Seed', type: 'number', default: 0, min: 0, max: 999999999, step: 1 },
     ],
   },
+  {
+    id: 'fal-ai/wan/v2.7/text-to-video',
+    name: 'Wan 2.7',
+    category: 'video',
+    description: 'Alibaba Wan 2.7 — smooth motion and scene fidelity',
+    estimatedTimeSeconds: [30, 90],
+    estimatedCostCents: [3, 12],
+    defaultParams: { resolution: '1080p', aspect_ratio: '16:9', duration: 5 },
+    params: [
+      { key: 'resolution', label: 'Resolution', type: 'select', default: '1080p', options: [
+        { label: '720p', value: '720p' }, { label: '1080p', value: '1080p' },
+      ]},
+      { key: 'aspect_ratio', label: 'Aspect Ratio', type: 'select', default: '16:9', options: [
+        { label: '16:9', value: '16:9' }, { label: '9:16', value: '9:16' },
+        { label: '1:1', value: '1:1' }, { label: '4:3', value: '4:3' }, { label: '3:4', value: '3:4' },
+      ]},
+      { key: 'duration', label: 'Duration (s)', type: 'slider', default: 5, min: 2, max: 15, step: 1 },
+    ],
+  },
+
+  // ── Video Generation — Image / Video / Audio to Video ─
   {
     id: 'fal-ai/veo3.1/fast/image-to-video',
     name: 'Veo 3.1 Img2Vid',
     category: 'video',
     supportsImageInput: true,
     imageInputKey: 'image_url',
-    description: 'Veo 3.1 image-to-video with audio',
+    description: 'Google Veo 3.1 image-to-video with native audio',
     estimatedTimeSeconds: [30, 120],
     estimatedCostCents: [20, 70],
     defaultParams: { duration: '8s', aspect_ratio: 'auto', resolution: '720p', generate_audio: true },
@@ -332,7 +323,60 @@ export const MODELS: ModelInfo[] = [
         { label: '720p', value: '720p' }, { label: '1080p', value: '1080p' }, { label: '4K', value: '4k' },
       ]},
       { key: 'generate_audio', label: 'Generate Audio', type: 'toggle', default: true },
-      { key: 'seed', label: 'Seed', type: 'number', default: 0, min: 0, max: 999999999, step: 1 },
+    ],
+  },
+  {
+    id: 'bytedance/seedance-2.0/image-to-video',
+    name: 'Seedance 2.0 Img2Vid',
+    category: 'video',
+    supportsImageInput: true,
+    imageInputKey: 'image_url',
+    description: 'ByteDance Seedance 2.0 image-to-video',
+    estimatedTimeSeconds: [20, 60],
+    estimatedCostCents: [5, 20],
+    defaultParams: { resolution: '720p', duration: 'auto', aspect_ratio: 'auto', generate_audio: true },
+    params: [
+      { key: 'resolution', label: 'Resolution', type: 'select', default: '720p', options: [
+        { label: '480p', value: '480p' }, { label: '720p', value: '720p' }, { label: '1080p', value: '1080p' },
+      ]},
+      { key: 'duration', label: 'Duration', type: 'select', default: 'auto', options: [
+        { label: 'Auto', value: 'auto' }, { label: '4s', value: '4' }, { label: '5s', value: '5' },
+        { label: '6s', value: '6' }, { label: '8s', value: '8' }, { label: '10s', value: '10' }, { label: '15s', value: '15' },
+      ]},
+      { key: 'aspect_ratio', label: 'Aspect Ratio', type: 'select', default: 'auto', options: [
+        { label: 'Auto', value: 'auto' }, { label: '16:9', value: '16:9' },
+        { label: '4:3', value: '4:3' }, { label: '1:1', value: '1:1' }, { label: '9:16', value: '9:16' },
+      ]},
+      { key: 'generate_audio', label: 'Generate Audio', type: 'toggle', default: true },
+    ],
+  },
+  {
+    id: 'bytedance/seedance-2.0/reference-to-video',
+    name: 'Seedance 2.0 Multi-Ref',
+    category: 'video',
+    supportsImageInput: true,
+    imageInputKey: 'image_urls',
+    supportsVideoInput: true,
+    videoInputKey: 'video_urls',
+    supportsAudioInput: true,
+    audioInputKey: 'audio_urls',
+    description: 'Seedance 2.0 — up to 9 images + 3 videos + 3 audio refs combined',
+    estimatedTimeSeconds: [20, 90],
+    estimatedCostCents: [10, 60],
+    defaultParams: { resolution: '720p', duration: 'auto', aspect_ratio: 'auto', generate_audio: true },
+    params: [
+      { key: 'resolution', label: 'Resolution', type: 'select', default: '720p', options: [
+        { label: '480p', value: '480p' }, { label: '720p', value: '720p' }, { label: '1080p', value: '1080p' },
+      ]},
+      { key: 'duration', label: 'Duration', type: 'select', default: 'auto', options: [
+        { label: 'Auto', value: 'auto' }, { label: '4s', value: '4' }, { label: '5s', value: '5' },
+        { label: '6s', value: '6' }, { label: '8s', value: '8' }, { label: '10s', value: '10' }, { label: '15s', value: '15' },
+      ]},
+      { key: 'aspect_ratio', label: 'Aspect Ratio', type: 'select', default: 'auto', options: [
+        { label: 'Auto', value: 'auto' }, { label: '21:9', value: '21:9' }, { label: '16:9', value: '16:9' },
+        { label: '4:3', value: '4:3' }, { label: '1:1', value: '1:1' }, { label: '3:4', value: '3:4' }, { label: '9:16', value: '9:16' },
+      ]},
+      { key: 'generate_audio', label: 'Generate Audio', type: 'toggle', default: true },
     ],
   },
   {
@@ -341,61 +385,16 @@ export const MODELS: ModelInfo[] = [
     category: 'video',
     supportsImageInput: true,
     imageInputKey: 'start_image_url',
-    description: 'Top-tier image-to-video with cinematic quality',
+    description: 'Kling v3 Pro — cinematic image-to-video',
     estimatedTimeSeconds: [30, 90],
     estimatedCostCents: [15, 50],
-    defaultParams: { duration: '5s', aspect_ratio: '16:9' },
+    defaultParams: { duration: '5', generate_audio: true },
     params: [
-      { key: 'duration', label: 'Duration', type: 'select', default: '5s', options: [
-        { label: '5s', value: '5s' }, { label: '10s', value: '10s' },
+      { key: 'duration', label: 'Duration', type: 'select', default: '5', options: [
+        { label: '3s', value: '3' }, { label: '5s', value: '5' }, { label: '8s', value: '8' },
+        { label: '10s', value: '10' }, { label: '15s', value: '15' },
       ]},
-      { key: 'aspect_ratio', label: 'Aspect Ratio', type: 'select', default: '16:9', options: [
-        { label: '16:9', value: '16:9' }, { label: '9:16', value: '9:16' }, { label: '1:1', value: '1:1' },
-      ]},
-      { key: 'generate_audio', label: 'Generate Audio', type: 'toggle', default: false },
-    ],
-  },
-  {
-    id: 'fal-ai/sora-2/image-to-video',
-    name: 'Sora 2 Img2Vid',
-    category: 'video',
-    supportsImageInput: true,
-    imageInputKey: 'image_url',
-    description: 'Sora image-to-video with rich detail',
-    estimatedTimeSeconds: [30, 120],
-    estimatedCostCents: [15, 50],
-    defaultParams: { duration: '4', resolution: '720p', aspect_ratio: '16:9' },
-    params: [
-      { key: 'duration', label: 'Duration', type: 'select', default: '4', options: [
-        { label: '4s', value: '4' }, { label: '8s', value: '8' }, { label: '12s', value: '12' }, { label: '15s', value: '15' },
-      ]},
-      { key: 'resolution', label: 'Resolution', type: 'select', default: '720p', options: [
-        { label: '720p', value: '720p' }, { label: '1080p', value: '1080p' },
-      ]},
-      { key: 'aspect_ratio', label: 'Aspect Ratio', type: 'select', default: '16:9', options: [
-        { label: '16:9', value: '16:9' }, { label: '9:16', value: '9:16' }, { label: '1:1', value: '1:1' },
-      ]},
-    ],
-  },
-
-  {
-    id: 'fal-ai/wan/v2.7/text-to-video',
-    name: 'Wan 2.7',
-    category: 'video',
-    description: 'Alibaba\'s latest video model — enhanced motion smoothness and scene fidelity',
-    estimatedTimeSeconds: [30, 90],
-    estimatedCostCents: [3, 12],
-    defaultParams: { resolution: '720p', aspect_ratio: '16:9', num_frames: 81, num_inference_steps: 30, guidance_scale: 3.5 },
-    params: [
-      { key: 'resolution', label: 'Resolution', type: 'select', default: '720p', options: [
-        { label: '580p', value: '580p' }, { label: '720p', value: '720p' },
-      ]},
-      { key: 'aspect_ratio', label: 'Aspect Ratio', type: 'select', default: '16:9', options: [
-        { label: '16:9', value: '16:9' }, { label: '9:16', value: '9:16' },
-      ]},
-      { key: 'num_frames', label: 'Frames', type: 'slider', default: 81, min: 17, max: 161, step: 8 },
-      { key: 'num_inference_steps', label: 'Steps', type: 'slider', default: 30, min: 10, max: 50, step: 1 },
-      { key: 'guidance_scale', label: 'Guidance', type: 'slider', default: 3.5, min: 1, max: 10, step: 0.5 },
+      { key: 'generate_audio', label: 'Generate Audio', type: 'toggle', default: true },
     ],
   },
   {
@@ -404,20 +403,15 @@ export const MODELS: ModelInfo[] = [
     category: 'video',
     supportsImageInput: true,
     imageInputKey: 'image_url',
-    description: 'Wan 2.7 image-to-video — animate any image with smooth motion',
+    description: 'Wan 2.7 image-to-video with smooth motion',
     estimatedTimeSeconds: [30, 90],
     estimatedCostCents: [3, 12],
-    defaultParams: { resolution: '720p', aspect_ratio: '16:9', num_frames: 81, num_inference_steps: 30, guidance_scale: 3.5 },
+    defaultParams: { resolution: '1080p', duration: 5 },
     params: [
-      { key: 'resolution', label: 'Resolution', type: 'select', default: '720p', options: [
-        { label: '580p', value: '580p' }, { label: '720p', value: '720p' },
+      { key: 'resolution', label: 'Resolution', type: 'select', default: '1080p', options: [
+        { label: '720p', value: '720p' }, { label: '1080p', value: '1080p' },
       ]},
-      { key: 'aspect_ratio', label: 'Aspect Ratio', type: 'select', default: '16:9', options: [
-        { label: '16:9', value: '16:9' }, { label: '9:16', value: '9:16' },
-      ]},
-      { key: 'num_frames', label: 'Frames', type: 'slider', default: 81, min: 17, max: 161, step: 8 },
-      { key: 'num_inference_steps', label: 'Steps', type: 'slider', default: 30, min: 10, max: 50, step: 1 },
-      { key: 'guidance_scale', label: 'Guidance', type: 'slider', default: 3.5, min: 1, max: 10, step: 0.5 },
+      { key: 'duration', label: 'Duration (s)', type: 'slider', default: 5, min: 2, max: 15, step: 1 },
     ],
   },
 

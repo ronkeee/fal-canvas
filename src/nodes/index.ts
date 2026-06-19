@@ -183,12 +183,12 @@ nodeRegistry.register(
     if (videoUrl) {
       const currentModel = getModelById(modelId);
       if (!currentModel?.supportsVideoInput) {
-        modelId = 'bytedance/seedance-2.0/enterprise/reference-to-video';
+        modelId = 'bytedance/seedance-2.0/reference-to-video';
       }
     } else if (audioUrl) {
       const currentModel = getModelById(modelId);
       if (!currentModel?.supportsAudioInput) {
-        modelId = 'bytedance/seedance-2.0/enterprise/reference-to-video';
+        modelId = 'bytedance/seedance-2.0/reference-to-video';
       }
     } else if (imageUrl) {
       const currentModel = getModelById(modelId);
@@ -204,8 +204,17 @@ nodeRegistry.register(
       ...(model?.defaultParams || {}),
     };
     const skipKeys = ['modelId', 'text', 'prompt', '_nodeWidth', '_nodeHeight'];
+    // Build a map of valid option values per select param to catch stale node.data values
+    const validOptions: Record<string, Set<unknown>> = {};
+    for (const p of model?.params || []) {
+      if (p.type === 'select' && p.options) {
+        validOptions[p.key] = new Set(p.options.map((o) => o.value));
+      }
+    }
     for (const [key, value] of Object.entries(node.data)) {
       if (!skipKeys.includes(key) && value !== undefined && value !== '') {
+        // Skip stale select values that don't exist in this model's options
+        if (validOptions[key] && !validOptions[key].has(value)) continue;
         input[key] = value;
       }
     }
